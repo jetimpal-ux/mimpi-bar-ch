@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>📋 Form Orderan Mimpi Bar</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { font-family: 'Segoe UI', Tahoma, sans-serif; -webkit-tap-highlight-color: transparent; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
+  
+  .toast {
+    position: fixed; top: 20px; right: 20px; z-index: 100;
+    padding: 12px 20px; border-radius: 8px; color: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    animation: slideIn 0.3s ease-out;
+    max-width: 320px;
+  }
+  @keyframes slideIn { from { transform: translateX(120%); } to { transform: translateX(0); } }
+  .toast.success { background: #16a34a; }
+  .toast.error { background: #dc2626; }
+  .toast.info { background: #2563eb; }
+  .toast.warning { background: #f59e0b; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 14px; border-radius: 8px;
+    font-size: 13px; font-weight: 600;
+    transition: all 0.15s;
+    min-height: 40px;
+    cursor: pointer;
+    border: none;
+  }
+  .btn-primary { background: #1e40af; color: white; }
+  .btn-primary:hover { background: #1e3a8a; }
+  .btn-success { background: #16a34a; color: white; }
+  .btn-success:hover { background: #15803d; }
+  .btn-danger { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
+  .btn-danger:hover { background: #fecaca; }
+  .btn-warning { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+  .btn-warning:hover { background: #fde68a; }
+  .btn-gray { background: #475569; color: white; }
+  .btn-gray:hover { background: #334155; }
+  .btn-purple { background: #7c3aed; color: white; }
+  .btn-purple:hover { background: #6d28d9; }
+  .btn-teal { background: #0d9488; color: white; }
+  .btn-teal:hover { background: #0f766e; }
+  .btn-rose { background: #e11d48; color: white; }
+  .btn-rose:hover { background: #be123c; }
+  .btn-sm { padding: 4px 8px; font-size: 11px; min-height: 32px; }
+  .btn-lg { padding: 12px 20px; font-size: 15px; min-height: 48px; }
+
+  input[type="number"], input[type="text"], input[type="date"] { min-height: 36px; }
+
+  .table-input {
+    width: 100%;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 6px 8px;
+    font-size: 13px;
+    text-align: right;
+    transition: all 0.15s;
+    background: white;
+  }
+  .table-input:focus { 
+    outline: none; 
+    border-color: #1e40af; 
+    box-shadow: 0 0 0 2px rgba(30,64,175,0.15);
+    background: #fffbeb;
+  }
+  .table-input.name-input { text-align: left; font-weight: 600; }
+  .table-input.order-input { background: #f8fafc; color: #94a3b8; font-style: italic; }
+  .table-input.carry-input { background: #eff6ff; border-color: #93c5fd; font-weight: 600; color: #1e40af; }
+  
+  .table-input::-webkit-outer-spin-button,
+  .table-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .table-input[type=number] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+
+  .row-negative { background: #fef2f2 !important; }
+  .row-surplus { background: #f0fdf4 !important; }
+
+  .date-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 10px; border-radius: 9999px;
+    font-size: 11px; font-weight: 600;
+  }
+  .date-badge.today { background: #dcfce7; color: #166534; }
+  .date-badge.history { background: #fef3c7; color: #92400e; }
+  .date-badge.empty { background: #f1f5f9; color: #64748b; }
+  .date-badge.special { background: #fce7f3; color: #9d174d; }
+  .date-badge.carry { background: #dbeafe; color: #1e40af; }
+
+  /* Banner warning untuk HP yang datanya kosong */
+  .data-warning {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border: 2px solid #f59e0b;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+  }
+</style>
+</head>
+<body class="bg-slate-100 min-h-screen">
+
+<div class="max-w-7xl mx-auto p-3 md:p-6">
+  <!-- HEADER -->
+  <div class="bg-white rounded-xl shadow p-4 md:p-6 mb-4">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+      <div>
+        <h1 class="text-xl md:text-2xl font-bold text-slate-800"> Form Orderan Mimpi Bar</h1>
+        <p class="text-xs md:text-sm text-slate-500">Manajemen stok harian bar & kasir</p>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button onclick="printForm()" class="btn btn-primary">🖨️ Print / PDF</button>
+        <button onclick="exportCSV()" class="btn btn-success">📥 Export CSV</button>
+      </div>
+    </div>
+
+    <!-- DATE NAVIGATOR -->
+    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 mb-4">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <div class="flex items-center gap-2 flex-wrap">
+          <button onclick="changeDate(-1)" class="btn btn-gray btn-sm">◀ Kemarin</button>
+          <input id="formDate" type="date" class="border rounded-lg px-3 py-2 text-sm font-bold" onchange="onDateChange()"/>
+          <button onclick="changeDate(1)" class="btn btn-gray btn-sm">Besok ▶</button>
+          <button onclick="goToToday()" class="btn btn-teal btn-sm"> Hari Ini (13 Sep)</button>
+          <button onclick="goToSep12()" class="btn btn-rose btn-sm">📌 12 Sep 2026</button>
+          <span id="dateBadge" class="date-badge today">Hari Ini</span>
+        </div>
+        <div class="flex gap-2 flex-wrap">
+          <button onclick="startNewDay()" class="btn btn-purple">📅 Mulai Hari Baru</button>
+          <button onclick="showHistory()" class="btn btn-warning btn-sm">📋 Riwayat</button>
+        </div>
+      </div>
+      <div id="dateInfo" class="mt-3 text-xs text-slate-600"></div>
+    </div>
+
+    <!-- STATS -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div class="bg-blue-50 p-3 rounded-lg border-l-4 border-blue-500">
+        <p class="text-xs text-slate-500">Total Item</p>
+        <p id="statTotal" class="text-lg font-bold">0</p>
+      </div>
+      <div class="bg-green-50 p-3 rounded-lg border-l-4 border-green-500">
+        <p class="text-xs text-slate-500">Stok Masuk (IN)</p>
+        <p id="statIn" class="text-lg font-bold text-green-700">0</p>
+      </div>
+      <div class="bg-red-50 p-3 rounded-lg border-l-4 border-red-500">
+        <p class="text-xs text-slate-500">Stok Keluar (OUT)</p>
+        <p id="statOut" class="text-lg font-bold text-red-700">0</p>
+      </div>
+      <div class="bg-amber-50 p-3 rounded-lg border-l-4 border-amber-500">
+        <p class="text-xs text-slate-500">Stok Akhir Total</p>
+        <p id="statEnd" class="text-lg font-bold text-amber-700">0</p>
+      </div>
+    </div>
+  </div>
+
+  <!--  BANNER PERINGATAN: DATA KOSONG -->
+  <div id="dataWarning" class="hidden data-warning">
+    <div class="flex items-start gap-3">
+      <div class="text-3xl">️</div>
+      <div class="flex-1">
+        <h3 class="font-bold text-amber-900 text-base">Data Belum Dimuat!</h3>
+        <p class="text-sm text-amber-800 mt-1">
+          Tabel kosong karena data belum dimuat di perangkat ini. 
+          Klik tombol di bawah untuk memuat data contoh (12 Sep & 13 Sep 2026).
+        </p>
+        <div class="mt-3 flex flex-wrap gap-2">
+          <button onclick="loadDemoData()" class="btn btn-rose btn-lg">
+            📥 Muat Data Demo (12 & 13 Sep)
+          </button>
+          <button onclick="document.getElementById('dataWarning').classList.add('hidden')" class="btn btn-gray btn-sm">
+            ✕ Tutup
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INFO CARRY OVER -->
+  <div id="carryInfo" class="hidden bg-blue-50 border-2 border-blue-300 rounded-xl p-4 mb-4">
+    <div class="flex items-start gap-3">
+      <div class="text-3xl">📥</div>
+      <div class="flex-1">
+        <h3 class="font-bold text-blue-900">Data dari Carry Over</h3>
+        <p class="text-xs text-blue-700 mt-1">Kolom <strong>AWAL</strong> (background biru) sudah diisi otomatis dari <strong>AKHIR</strong> hari sebelumnya (12 Sep).</p>
+      </div>
+      <button onclick="document.getElementById('carryInfo').classList.add('hidden')" class="text-slate-400 hover:text-slate-700 text-2xl leading-none">&times;</button>
+    </div>
+  </div>
+
+  <!-- INFO 12 SEP -->
+  <div id="sep12Info" class="hidden bg-rose-50 border-2 border-rose-300 rounded-xl p-4 mb-4">
+    <div class="flex items-start gap-3">
+      <div class="text-3xl">📌</div>
+      <div class="flex-1">
+        <h3 class="font-bold text-rose-900">Data Referensi: 12 September 2026</h3>
+        <p class="text-xs text-rose-700 mt-1">Data dari gambar form orderan.</p>
+      </div>
+      <button onclick="document.getElementById('sep12Info').classList.add('hidden')" class="text-slate-400 hover:text-slate-700 text-2xl leading-none">&times;</button>
+    </div>
+  </div>
+
+  <!-- TIPS INPUT -->
+  <div class="bg-emerald-50 border-2 border-emerald-200 rounded-xl p-3 mb-4">
+    <div class="flex items-start gap-3">
+      <div class="text-2xl">💡</div>
+      <div class="flex-1">
+        <h3 class="font-bold text-emerald-900 text-sm">Tips Input Cepat</h3>
+        <p class="text-xs text-emerald-700 mt-1">
+          • Kolom yang belum diisi tampil <strong>kosong</strong> (tidak ada angka 0)<br>
+          • <strong>Klik langsung</strong> → ketik angka → klik di luar untuk simpan<br>
+          • Tekan <strong>Tab</strong> untuk pindah ke kolom berikutnya<br>
+          • Tekan <strong>Enter</strong> untuk simpan & pindah ke baris bawah
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORM ORDERAN MIMPI BAR -->
+  <div class="bg-white rounded-xl shadow p-3 md:p-6 mb-4">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+      <h2 class="text-lg md:text-xl font-bold text-slate-800"> Form Orderan Mimpi Bar</h2>
+      <div class="flex gap-2 flex-wrap">
+        <button onclick="openAddModal('bar')" class="btn btn-primary btn-sm">+ Tambah Barang</button>
+        <button onclick="clearSection('bar')" class="btn btn-warning btn-sm">️ Hapus Section</button>
+      </div>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm" id="tableBar">
+        <thead class="bg-slate-100 sticky top-0">
+          <tr>
+            <th class="p-2 text-left w-10">#</th>
+            <th class="p-2 text-left">NAMA BARANG</th>
+            <th class="p-2 text-right w-20">ORDER</th>
+            <th class="p-2 text-right w-20">AWAL</th>
+            <th class="p-2 text-right w-20">IN</th>
+            <th class="p-2 text-right w-20">OUT</th>
+            <th class="p-2 text-right w-24">AKHIR</th>
+            <th class="p-2 text-center w-24">AKSI</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyBar"></tbody>
+        <tfoot class="bg-slate-50 font-bold">
+          <tr>
+            <td colspan="2" class="p-2 text-right">TOTAL</td>
+            <td class="p-2 text-right" id="totalOrderBar">0</td>
+            <td class="p-2 text-right" id="totalAwalBar">0</td>
+            <td class="p-2 text-right text-green-700" id="totalInBar">0</td>
+            <td class="p-2 text-right text-red-700" id="totalOutBar">0</td>
+            <td class="p-2 text-right text-amber-700" id="totalAkhirBar">0</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <!-- FORM ORDERAN MIMPI KASIR -->
+  <div class="bg-white rounded-xl shadow p-3 md:p-6 mb-4">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+      <h2 class="text-lg md:text-xl font-bold text-slate-800"> Form Orderan Mimpi Kasir</h2>
+      <div class="flex gap-2 flex-wrap">
+        <button onclick="openAddModal('kasir')" class="btn btn-primary btn-sm">+ Tambah Barang</button>
+        <button onclick="clearSection('kasir')" class="btn btn-warning btn-sm">🗑️ Hapus Section</button>
+      </div>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm" id="tableKasir">
+        <thead class="bg-slate-100 sticky top-0">
+          <tr>
+            <th class="p-2 text-left w-10">#</th>
+            <th class="p-2 text-left">NAMA BARANG</th>
+            <th class="p-2 text-right w-20">ORDER</th>
+            <th class="p-2 text-right w-20">AWAL</th>
+            <th class="p-2 text-right w-20">IN</th>
+            <th class="p-2 text-right w-20">OUT</th>
+            <th class="p-2 text-right w-24">AKHIR</th>
+            <th class="p-2 text-center w-24">AKSI</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyKasir"></tbody>
+        <tfoot class="bg-slate-50 font-bold">
+          <tr>
+            <td colspan="2" class="p-2 text-right">TOTAL</td>
+            <td class="p-2 text-right" id="totalOrderKasir">0</td>
+            <td class="p-2 text-right" id="totalAwalKasir">0</td>
+            <td class="p-2 text-right text-green-700" id="totalInKasir">0</td>
+            <td class="p-2 text-right text-red-700" id="totalOutKasir">0</td>
+            <td class="p-2 text-right text-amber-700" id="totalAkhirKasir">0</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="bg-white rounded-xl shadow p-4 text-center text-xs text-slate-500">
+    <p>💾 Data tersimpan otomatis per tanggal di browser (localStorage)</p>
+    <p class="text-xs text-slate-400 mt-1">Jika data hilang, klik "Muat Data Demo" di atas</p>
+    <button onclick="resetAll()" class="btn btn-danger btn-sm mt-2">️ Reset Semua Data</button>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="fixed inset-0 hidden items-center justify-center z-50 p-4" style="background:rgba(0,0,0,0.5);backdrop-filter:blur(2px);">
+  <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-6 max-h-[90vh] overflow-auto">
+    <div class="flex justify-between items-center mb-4">
+      <h3 id="modalTitle" class="text-lg font-bold"></h3>
+      <button onclick="closeModal()" class="text-3xl text-slate-400 hover:text-slate-700 leading-none w-10 h-10">&times;</button>
+    </div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<!-- MODAL RIWAYAT -->
+<div id="historyModal" class="fixed inset-0 hidden items-center justify-center z-50 p-4" style="background:rgba(0,0,0,0.5);backdrop-filter:blur(2px);">
+  <div class="bg-white rounded-xl shadow-xl w-full max-w-2xl p-6 max-h-[90vh] overflow-auto">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-lg font-bold">📋 Riwayat Data Per Tanggal</h3>
+      <button onclick="closeHistoryModal()" class="text-3xl text-slate-400 hover:text-slate-700 leading-none w-10 h-10">&times;</button>
+    </div>
+    <div id="historyBody"></div>
+  </div>
+</div>
+
+<div id="toastContainer"></div>
+
+<script>
+/* ========== DATA LAYER ========== */
+const DB = {
+  get(k, def) {
+    try {
+      const val = localStorage.getItem(k);
+      if (val === null) return def;
+      const parsed = JSON.parse(val);
+      // Validasi: harus object dengan struktur yang benar
+      if (typeof parsed !== 'object' || parsed === null) return def;
+      return parsed;
+    } catch(e) { 
+      console.warn('DB get error for', k, e);
+      return def; 
+    }
+  },
+  set(k, v) {
+    try { 
+      localStorage.setItem(k, JSON.stringify(v)); 
+      return true; 
+    }
+    catch(e) { 
+      console.error('DB set error:', e);
+      return false; 
+    }
+  }
+};
+
+let allData = DB.get('mimpi_data', {});
+let currentDate = localStorage.getItem('mimpi_current_date') || '2026-09-13';
+
+// Validasi struktur allData - jika rusak, reset
+if (typeof allData !== 'object' || allData === null) {
+  console.warn('allData invalid, resetting');
+  allData = {};
+}
+
+function getCurrentData(){
+  if (!allData[currentDate]) {
+    allData[currentDate] = { bar: [], kasir: [] };
+  }
+  return allData[currentDate];
+}
+
+function saveAll(){
+  DB.set('mimpi_data', allData);
+  localStorage.setItem('mimpi_current_date', currentDate);
+  updateStats();
+  updateDateInfo();
+  checkDataWarning();
+}
+
+/* ========== DATA 12 SEPTEMBER 2026 ========== */
+const SEP12_BAR = [
+  {id:1, name:'AQUA', order:0, awal:144, in:113, out:87},
+  {id:2, name:'BIR BINTANG', order:0, awal:22, in:4, out:0},
+  {id:3, name:'COCA COLA', order:0, awal:7, in:0, out:0},
+  {id:4, name:'FANTA', order:0, awal:12, in:0, out:0},
+  {id:5, name:'SPRITE', order:0, awal:25, in:1, out:2},
+  {id:6, name:'DAUN THE', order:0, awal:1, in:1, out:0},
+  {id:7, name:'ES KRIM', order:0, awal:0, in:0, out:0},
+  {id:8, name:'GULA PACK', order:0, awal:9, in:10, out:9},
+  {id:9, name:'GULA CAIR', order:0, awal:8, in:30, out:4},
+  {id:10, name:'KOPI HITAM', order:0, awal:20, in:2, out:4},
+  {id:11, name:'KOPI SUSU SASET', order:0, awal:0, in:0, out:0},
+  {id:12, name:'KOPI GULA AREN', order:0, awal:80, in:7, out:14},
+  {id:13, name:'NUTRISARI LECI TEA', order:0, awal:45, in:3, out:6},
+  {id:14, name:'MILO SASET', order:0, awal:8, in:30, out:7},
+  {id:15, name:'NUTRISARI LECI TEA (2)', order:0, awal:22, in:1, out:0},
+  {id:16, name:'OREO 15gr', order:0, awal:1, in:1, out:1},
+  {id:17, name:'POP MIE', order:0, awal:24, in:8, out:16},
+  {id:18, name:'CUANKI', order:0, awal:25, in:0, out:0},
+  {id:19, name:'POP ICE COKLAT', order:0, awal:5, in:28, out:4},
+  {id:20, name:'POP ICE STRAWBERRY', order:0, awal:15, in:10, out:0},
+  {id:21, name:'NUTRISARI LEMON TEA', order:0, awal:29, in:2, out:0},
+  {id:22, name:'GUINNES', order:0, awal:5, in:0, out:0},
+  {id:23, name:'SKM PUTIH', order:0, awal:8, in:20, out:12},
+  {id:24, name:'SABUN LIGHT', order:0, awal:1, in:1, out:0},
+  {id:25, name:'GELAS LOFRIS', order:0, awal:9, in:1, out:0},
+  {id:26, name:'TRAY SNACK LOFRIS', order:0, awal:12, in:1, out:0},
+  {id:27, name:'CUP KOPI', order:0, awal:6, in:50, out:0},
+  {id:28, name:'SENDOK BEBEK', order:0, awal:0, in:0, out:0},
+  {id:29, name:'GELAS ES 14OZ', order:0, awal:15, in:50, out:0}
+];
+
+const SEP12_KASIR = [
+  {id:1, name:'AMPLOP', order:0, awal:9, in:0, out:0},
+  {id:2, name:'KERTAS KASIR', order:0, awal:1, in:2, out:0},
+  {id:3, name:'KERTAS EDC', order:0, awal:101, in:0, out:0},
+  {id:4, name:'ISI HECTER', order:0, awal:1, in:0, out:0},
+  {id:5, name:'HANDSOAP', order:0, awal:0, in:0, out:0},
+  {id:6, name:'PORSTEK', order:0, awal:1, in:0, out:0}
+];
+
+function calcAkhir(item){ return (item.awal||0) + (item.in||0) - (item.out||0); }
+
+function generateSep13FromSep12(){
+  return {
+    bar: SEP12_BAR.map(item => ({...item, order:0, awal:calcAkhir(item), in:0, out:0})),
+    kasir: SEP12_KASIR.map(item => ({...item, order:0, awal:calcAkhir(item), in:0, out:0}))
+  };
+}
+
+/* ========== SEED YANG LEBIH ROBUST ========== */
+function seedInitialData(){
+  let seeded = false;
+  
+  const sep12 = '2026-09-12';
+  const sep13 = '2026-09-13';
+  
+  // Cek apakah data 12 Sep valid (punya bar array dengan isi)
+  const hasValidSep12 = allData[sep12] && 
+                        Array.isArray(allData[sep12].bar) && 
+                        allData[sep12].bar.length > 0;
+  
+  if (!hasValidSep12) {
+    console.log('Seeding 12 Sep data...');
+    allData[sep12] = {
+      bar: JSON.parse(JSON.stringify(SEP12_BAR)),
+      kasir: JSON.parse(JSON.stringify(SEP12_KASIR))
+    };
+    seeded = true;
+  }
+  
+  // Cek apakah data 13 Sep valid
+  const hasValidSep13 = allData[sep13] && 
+                        Array.isArray(allData[sep13].bar) && 
+                        allData[sep13].bar.length > 0;
+  
+  if (!hasValidSep13) {
+    console.log('Seeding 13 Sep data (carry over)...');
+    allData[sep13] = generateSep13FromSep12();
+    seeded = true;
+  }
+  
+  if (seeded) {
+    DB.set('mimpi_data', allData);
+    console.log('Data seeded successfully');
+  }
+  
+  return seeded;
+}
+
+/* ========== FUNGSI BARU: LOAD DEMO DATA (untuk HP) ========== */
+function loadDemoData(){
+  if (!confirm('Muat data demo (12 & 13 Sep 2026)?\n\nData yang sudah ada di tanggal ini akan ditimpa.')) return;
+  
+  // Force load data demo
+  allData['2026-09-12'] = {
+    bar: JSON.parse(JSON.stringify(SEP12_BAR)),
+    kasir: JSON.parse(JSON.stringify(SEP12_KASIR))
+  };
+  allData['2026-09-13'] = generateSep13FromSep12();
+  
+  DB.set('mimpi_data', allData);
+  
+  // Pindah ke 13 Sep
+  currentDate = '2026-09-13';
+  document.getElementById('formDate').value = currentDate;
+  
+  renderTable('bar');
+  renderTable('kasir');
+  updateDateInfo();
+  updateStats();
+  checkDataWarning();
+  
+  toast('✅ Data demo berhasil dimuat! (12 & 13 Sep)', 'success', 3000);
+}
+
+/* ========== CEK & TAMPILKAN WARNING JIKA DATA KOSONG ========== */
+function checkDataWarning(){
+  const data = getCurrentData();
+  const hasData = (data.bar && data.bar.length > 0) || (data.kasir && data.kasir.length > 0);
+  
+  // Cek juga apakah ada data di tanggal lain
+  const hasAnyData = Object.keys(allData).some(date => {
+    const d = allData[date];
+    return (d.bar && d.bar.length > 0) || (d.kasir && d.kasir.length > 0);
+  });
+  
+  const warningEl = document.getElementById('dataWarning');
+  
+  if (!hasData && !hasAnyData) {
+    // Benar-benar kosong - tampilkan warning besar
+    warningEl.classList.remove('hidden');
+  } else if (!hasData && hasAnyData) {
+    // Ada data di tanggal lain, tapi tanggal ini kosong - warning kecil
+    warningEl.classList.remove('hidden');
+  } else {
+    warningEl.classList.add('hidden');
+  }
+}
+
+/* ========== UTIL ========== */
+const fmt = n => (n||0).toLocaleString('id-ID');
+function nextId(arr){ return arr && arr.length ? Math.max(...arr.map(x => x.id || 0)) + 1 : 1; }
+
+function formatDateIndo(dateStr){
+  if (!dateStr) return '-';
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+}
+
+function toast(msg, type='info', duration=3000){
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = msg;
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(()=>{ el.style.opacity='0'; el.style.transition='opacity 0.3s'; setTimeout(()=>el.remove(), 300); }, duration);
+}
+
+function displayValue(val){
+  if (val === null || val === undefined || val === 0 || val === '') return '';
+  return val;
+}
+
+function parseInputValue(val){
+  if (val === '' || val === null || val === undefined) return 0;
+  const num = parseInt(val);
+  return isNaN(num) ? 0 : num;
+}
+
+/* ========== DATE NAVIGATION ========== */
+document.getElementById('formDate').value = currentDate;
+
+function changeDate(delta){
+  const d = new Date(currentDate);
+  d.setDate(d.getDate() + delta);
+  currentDate = d.toISOString().split('T')[0];
+  document.getElementById('formDate').value = currentDate;
+  onDateChange();
+}
+
+function goToToday(){
+  currentDate = '2026-09-13';
+  document.getElementById('formDate').value = currentDate;
+  onDateChange();
+  toast('📅 Kembali ke hari ini (13 Sep)', 'info', 1500);
+}
+
+function goToSep12(){
+  currentDate = '2026-09-12';
+  document.getElementById('formDate').value = currentDate;
+  onDateChange();
+  toast('📌 Data 12 September 2026', 'info', 1500);
+}
+
+function onDateChange(){
+  currentDate = document.getElementById('formDate').value;
+  if (!currentDate) return;
+  saveAll();
+  renderTable('bar');
+  renderTable('kasir');
+  updateDateInfo();
+}
+
+function updateDateInfo(){
+  const data = getCurrentData();
+  const hasData = (data.bar && data.bar.length > 0) || (data.kasir && data.kasir.length > 0);
+  const isToday = currentDate === '2026-09-13';
+  const isSep12 = currentDate === '2026-09-12';
+  const badge = document.getElementById('dateBadge');
+  const info = document.getElementById('dateInfo');
+
+  if (isSep12) {
+    badge.className = 'date-badge special';
+    badge.innerHTML = '📌 12 Sep 2026 (Kemarin)';
+  } else if (isToday) {
+    badge.className = 'date-badge carry';
+    badge.innerHTML = '📥 13 Sep 2026 (Hari Ini)';
+  } else if (hasData) {
+    badge.className = 'date-badge history';
+    badge.innerHTML = '📋 Data Lama';
+  } else {
+    badge.className = 'date-badge empty';
+    badge.innerHTML = '⭕ Belum Ada Data';
+  }
+
+  info.innerHTML = `<strong>${formatDateIndo(currentDate)}</strong> ${hasData ? `• ${data.bar.length} barang bar + ${data.kasir.length} barang kasir` : '• Belum ada data - klik "Muat Data Demo" di atas'}`;
+
+  document.getElementById('sep12Info').classList.toggle('hidden', !isSep12);
+  document.getElementById('carryInfo').classList.toggle('hidden', !isToday);
+}
+
+/* ========== RENDER TABLE ========== */
+function renderTable(section){
+  try {
+    const data = getCurrentData();
+    const items = section === 'bar' ? data.bar : data.kasir;
+    const tbody = document.getElementById(section === 'bar' ? 'tbodyBar' : 'tbodyKasir');
+    if (!tbody) return;
+
+    const isCarryDate = currentDate === '2026-09-13';
+
+    if (!items || items.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-slate-400 text-sm">
+        <div class="py-4">
+          <div class="text-4xl mb-2">📭</div>
+          <div class="font-bold mb-1">Belum ada barang</div>
+          <div class="text-xs">Klik "+ Tambah Barang" atau "Muat Data Demo" di atas</div>
+        </div>
+      </td></tr>`;
+      updateTotals(section, {order:0, awal:0, in:0, out:0, akhir:0});
+      return;
+    }
+
+    tbody.innerHTML = items.map((item, idx) => {
+      const akhir = calcAkhir(item);
+      const rowClass = akhir < 0 ? 'row-negative' : (akhir > (item.awal||0) ? 'row-surplus' : '');
+      
+      const orderVal = displayValue(item.order);
+      const awalVal = displayValue(item.awal);
+      const inVal = displayValue(item.in);
+      const outVal = displayValue(item.out);
+      
+      const awalClass = isCarryDate && item.awal ? 'table-input carry-input' : 'table-input';
+      
+      return `
+        <tr class="border-b hover:bg-slate-50 ${rowClass}">
+          <td class="p-2 text-center text-xs text-slate-500">${idx+1}</td>
+          <td class="p-1">
+            <input type="text" class="table-input name-input" value="${item.name || ''}" 
+                   onchange="updateItem('${section}', ${item.id}, 'name', this.value)"
+                   onkeydown="handleEnter(event, this, '${section}', ${item.id}, 'name')"/>
+          </td>
+          <td class="p-1">
+            <input type="number" class="table-input order-input" value="${orderVal}" 
+                   onchange="updateItem('${section}', ${item.id}, 'order', this.value)"
+                   onfocus="handleFocus(this)" onblur="handleBlur(this)"
+                   onkeydown="handleEnter(event, this, '${section}', ${item.id}, 'order')"
+                   placeholder="-"/>
+          </td>
+          <td class="p-1">
+            <input type="number" class="${awalClass}" value="${awalVal}" 
+                   onchange="updateItem('${section}', ${item.id}, 'awal', this.value)"
+                   onfocus="handleFocus(this)" onblur="handleBlur(this)"
+                   onkeydown="handleEnter(event, this, '${section}', ${item.id}, 'awal')"
+                   ${isCarryDate && item.awal ? 'title="Dari AKHIR 12 Sep"' : ''}/>
+          </td>
+          <td class="p-1">
+            <input type="number" class="table-input" value="${inVal}" 
+                   onchange="updateItem('${section}', ${item.id}, 'in', this.value)"
+                   onfocus="handleFocus(this)" onblur="handleBlur(this)"
+                   onkeydown="handleEnter(event, this, '${section}', ${item.id}, 'in')"/>
+          </td>
+          <td class="p-1">
+            <input type="number" class="table-input" value="${outVal}" 
+                   onchange="updateItem('${section}', ${item.id}, 'out', this.value)"
+                   onfocus="handleFocus(this)" onblur="handleBlur(this)"
+                   onkeydown="handleEnter(event, this, '${section}', ${item.id}, 'out')"/>
+          </td>
+          <td class="p-2 text-right font-bold ${akhir<0?'text-red-600':akhir>0?'text-amber-700':'text-slate-600'}">
+            ${akhir}
+          </td>
+          <td class="p-2 text-center whitespace-nowrap">
+            <button onclick="editItem('${section}', ${item.id})" class="btn btn-primary btn-sm">✏️</button>
+            <button onclick="deleteItem('${section}', ${item.id})" class="btn btn-danger btn-sm">🗑️</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    const totals = items.reduce((acc, item) => {
+      acc.order += (item.order||0);
+      acc.awal += (item.awal||0);
+      acc.in += (item.in||0);
+      acc.out += (item.out||0);
+      acc.akhir += calcAkhir(item);
+      return acc;
+    }, {order:0, awal:0, in:0, out:0, akhir:0});
+    updateTotals(section, totals);
+  } catch(e) { 
+    console.error('Render error:', e);
+    toast('❌ Error render: ' + e.message, 'error');
+  }
+}
+
+function handleFocus(input){
+  if (input.value === '0' || input.value === '') {
+    input.value = '';
+  }
+  input.select();
+}
+
+function handleBlur(input){
+  if (input.value === '' || input.value === null) {
+    input.value = '';
+  }
+}
+
+function handleEnter(event, input, section, id, field){
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    updateItem(section, id, field, input.value);
+    const allInputs = Array.from(document.querySelectorAll('#tbody' + (section === 'bar' ? 'Bar' : 'Kasir') + ' input'));
+    const currentIndex = allInputs.indexOf(input);
+    if (currentIndex >= 0 && currentIndex < allInputs.length - 1) {
+      setTimeout(() => allInputs[currentIndex + 1].focus(), 50);
+    }
+  }
+}
+
+function updateTotals(section, totals){
+  const suffix = section === 'bar' ? 'Bar' : 'Kasir';
+  const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = fmt(val); };
+  setVal(`totalOrder${suffix}`, totals.order);
+  setVal(`totalAwal${suffix}`, totals.awal);
+  setVal(`totalIn${suffix}`, totals.in);
+  setVal(`totalOut${suffix}`, totals.out);
+  setVal(`totalAkhir${suffix}`, totals.akhir);
+}
+
+function updateStats(){
+  const data = getCurrentData();
+  const all = [...(data.bar||[]), ...(data.kasir||[])];
+  const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = fmt(val); };
+  setVal('statTotal', all.length);
+  setVal('statIn', all.reduce((a,b)=>a+(b.in||0),0));
+  setVal('statOut', all.reduce((a,b)=>a+(b.out||0),0));
+  setVal('statEnd', all.reduce((a,b)=>a+calcAkhir(b),0));
+}
+
+/* ========== CRUD ========== */
+function updateItem(section, id, field, value){
+  try {
+    const data = getCurrentData();
+    const items = section === 'bar' ? data.bar : data.kasir;
+    const item = items.find(x => x.id === id);
+    if (!item) return;
+    if (field === 'name') item.name = value.trim().toUpperCase();
+    else item[field] = parseInputValue(value);
+    saveAll();
+    renderTable(section);
+  } catch(e) { console.error(e); }
+}
+
+function openAddModal(section){
+  document.getElementById('modalTitle').textContent = '➕ Tambah Barang Baru';
+  document.getElementById('modalBody').innerHTML = `
+    <div class="space-y-3">
+      <div><label class="block text-sm font-bold mb-1">Nama Barang *</label>
+      <input id="new_name" type="text" class="border rounded-lg px-3 py-2 w-full" placeholder="Contoh: AQUA 600ML"/></div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="block text-sm mb-1">Order (opsional)</label><input id="new_order" type="number" value="" class="border rounded-lg px-3 py-2 w-full" placeholder="-"/></div>
+        <div><label class="block text-sm mb-1">Awal</label><input id="new_awal" type="number" value="" class="border rounded-lg px-3 py-2 w-full" placeholder="-"/></div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="block text-sm mb-1">IN (Masuk)</label><input id="new_in" type="number" value="" class="border rounded-lg px-3 py-2 w-full" placeholder="-"/></div>
+        <div><label class="block text-sm mb-1">OUT (Keluar)</label><input id="new_out" type="number" value="" class="border rounded-lg px-3 py-2 w-full" placeholder="-"/></div>
+      </div>
+      <div class="bg-slate-50 p-3 rounded-lg text-sm">
+        <p>Stok Akhir: <strong id="previewAkhir">0</strong></p>
+        <p class="text-xs text-slate-500">Rumus: Awal + IN - OUT</p>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="closeModal()" class="btn btn-gray flex-1">Batal</button>
+        <button onclick="saveNewItem('${section}')" class="btn btn-success flex-1">💾 Simpan</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('modal').classList.remove('hidden');
+  document.getElementById('modal').classList.add('flex');
+  ['new_awal','new_in','new_out'].forEach(id=>{
+    document.getElementById(id).addEventListener('input', ()=>{
+      const a = parseInputValue(document.getElementById('new_awal').value);
+      const i = parseInputValue(document.getElementById('new_in').value);
+      const o = parseInputValue(document.getElementById('new_out').value);
+      document.getElementById('previewAkhir').textContent = a + i - o;
+    });
+  });
+  setTimeout(()=>{ const el = document.getElementById('new_name'); if (el) el.focus(); }, 100);
+}
+
+function saveNewItem(section){
+  try {
+    const name = document.getElementById('new_name').value.trim().toUpperCase();
+    if (!name) { alert('⚠️ Nama barang wajib diisi!'); return; }
+    const data = getCurrentData();
+    const items = section === 'bar' ? data.bar : data.kasir;
+    items.push({
+      id: nextId(items),
+      name,
+      order: parseInputValue(document.getElementById('new_order').value),
+      awal: parseInputValue(document.getElementById('new_awal').value),
+      in: parseInputValue(document.getElementById('new_in').value),
+      out: parseInputValue(document.getElementById('new_out').value)
+    });
+    saveAll();
+    renderTable(section);
+    closeModal();
+    toast(`✅ "${name}" berhasil ditambahkan!`, 'success', 2000);
+  } catch(e) { toast('❌ Error: ' + e.message, 'error'); }
+}
+
+function editItem(section, id){
+  const data = getCurrentData();
+  const items = section === 'bar' ? data.bar : data.kasir;
+  const item = items.find(x => x.id === id);
+  if (!item) return;
+  document.getElementById('modalTitle').textContent = '✏️ Edit Barang';
+  document.getElementById('modalBody').innerHTML = `
+    <div class="space-y-3">
+      <div><label class="block text-sm font-bold mb-1">Nama Barang *</label><input id="edit_name" type="text" class="border rounded-lg px-3 py-2 w-full" value="${item.name || ''}"/></div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="block text-sm mb-1">Order</label><input id="edit_order" type="number" value="${displayValue(item.order)}" class="border rounded-lg px-3 py-2 w-full" placeholder="-"/></div>
+        <div><label class="block text-sm mb-1">Awal</label><input id="edit_awal" type="number" value="${displayValue(item.awal)}" class="border rounded-lg px-3 py-2 w-full" placeholder="-"/></div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="block text-sm mb-1">IN (Masuk)</label><input id="edit_in" type="number" value="${displayValue(item.in)}" class="border rounded-lg px-3 py-2 w-full" placeholder="-"/></div>
+        <div><label class="block text-sm mb-1">OUT (Keluar)</label><input id="edit_out" type="number" value="${displayValue(item.out)}" class="border rounded-lg px-3 py-2 w-full" placeholder="-"/></div>
+      </div>
+      <div class="bg-slate-50 p-3 rounded-lg text-sm">
+        <p>Stok Akhir: <strong id="editPreviewAkhir">${calcAkhir(item)}</strong></p>
+        <p class="text-xs text-slate-500">Rumus: Awal + IN - OUT</p>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="closeModal()" class="btn btn-gray flex-1">Batal</button>
+        <button onclick="saveEditItem('${section}', ${item.id})" class="btn btn-success flex-1">💾 Simpan</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('modal').classList.remove('hidden');
+  document.getElementById('modal').classList.add('flex');
+  ['edit_awal','edit_in','edit_out'].forEach(id=>{
+    document.getElementById(id).addEventListener('input', ()=>{
+      const a = parseInputValue(document.getElementById('edit_awal').value);
+      const i = parseInputValue(document.getElementById('edit_in').value);
+      const o = parseInputValue(document.getElementById('edit_out').value);
+      document.getElementById('editPreviewAkhir').textContent = a + i - o;
+    });
+  });
+}
+
+function saveEditItem(section, id){
+  try {
+    const data = getCurrentData();
+    const items = section === 'bar' ? data.bar : data.kasir;
+    const item = items.find(x => x.id === id);
+    if (!item) return;
+    const name = document.getElementById('edit_name').value.trim().toUpperCase();
+    if (!name) { alert('⚠️ Nama barang wajib diisi!'); return; }
+    item.name = name;
+    item.order = parseInputValue(document.getElementById('edit_order').value);
+    item.awal = parseInputValue(document.getElementById('edit_awal').value);
+    item.in = parseInputValue(document.getElementById('edit_in').value);
+    item.out = parseInputValue(document.getElementById('edit_out').value);
+    saveAll();
+    renderTable(section);
+    closeModal();
+    toast(`✅ "${name}" berhasil diperbarui!`, 'success', 2000);
+  } catch(e) { toast(' Error: ' + e.message, 'error'); }
+}
+
+function deleteItem(section, id){
+  try {
+    const data = getCurrentData();
+    const items = section === 'bar' ? data.bar : data.kasir;
+    const item = items.find(x => x.id === id);
+    if (!item) return;
+    if (!confirm(`Hapus "${item.name}"?`)) return;
+    if (section === 'bar') data.bar = data.bar.filter(x => x.id !== id);
+    else data.kasir = data.kasir.filter(x => x.id !== id);
+    saveAll();
+    renderTable(section);
+    toast('🗑️ Barang dihapus', 'info');
+  } catch(e) { toast('❌ Error: ' + e.message, 'error'); }
+}
+
+function clearSection(section){
+  try {
+    const data = getCurrentData();
+    const items = section === 'bar' ? data.bar : data.kasir;
+    if (!items || items.length === 0) { toast('Tidak ada data', 'info'); return; }
+    const name = section === 'bar' ? 'Mimpi Bar' : 'Mimpi Kasir';
+    if (!confirm(`⚠️ Hapus SEMUA barang di ${name}?`)) return;
+    if (!confirm(`🔴 KONFIRMASI AKHIR`)) return;
+    if (section === 'bar') data.bar = []; else data.kasir = [];
+    saveAll();
+    renderTable(section);
+    toast(`🗑️ Semua data ${name} dihapus`, 'warning', 4000);
+  } catch(e) { toast('❌ Error: ' + e.message, 'error'); }
+}
+
+function closeModal(){
+  document.getElementById('modal').classList.add('hidden');
+  document.getElementById('modal').classList.remove('flex');
+}
+
+/* ========== RIWAYAT ========== */
+function showHistory(){
+  const dates = Object.keys(allData).sort().reverse();
+  const body = document.getElementById('historyBody');
+  if (dates.length === 0) {
+    body.innerHTML = '<p class="text-center text-slate-500 py-8">Belum ada riwayat data.</p>';
+  } else {
+    let html = '<div class="space-y-2">';
+    dates.forEach(date => {
+      const data = allData[date];
+      const isCurrent = date === currentDate;
+      const isSep12 = date === '2026-09-12';
+      const totalAkhir = [...(data.bar||[]), ...(data.kasir||[])].reduce((a,b)=>a+calcAkhir(b),0);
+      html += `
+        <div class="border rounded-lg p-3 ${isCurrent ? 'bg-blue-50 border-blue-300' : isSep12 ? 'bg-rose-50 border-rose-300' : 'bg-white hover:bg-slate-50'}">
+          <div class="flex items-center justify-between gap-2 flex-wrap">
+            <div class="flex-1 min-w-0">
+              <div class="font-bold text-sm">${formatDateIndo(date)} ${isCurrent ? '<span class="text-blue-600">(Aktif)</span>' : ''} ${isSep12 ? '<span class="text-rose-600">📌 Data Gambar</span>' : ''}</div>
+              <div class="text-xs text-slate-500 mt-1">🍺 ${(data.bar||[]).length} barang bar •  ${(data.kasir||[]).length} barang kasir • <strong class="text-amber-700">Total AKHIR: ${totalAkhir}</strong></div>
+            </div>
+            <div class="flex gap-1 flex-wrap">
+              <button onclick="loadHistoryDate('${date}')" class="btn btn-primary btn-sm"> Buka</button>
+              <button onclick="printHistoryDate('${date}')" class="btn btn-gray btn-sm">🖨️ Print</button>
+              ${!isSep12 ? `<button onclick="deleteHistoryDate('${date}')" class="btn btn-danger btn-sm">🗑️</button>` : ''}
+            </div>
+          </div>
+        </div>
+      `;
+    });
+    html += '</div>';
+    body.innerHTML = html;
+  }
+  document.getElementById('historyModal').classList.remove('hidden');
+  document.getElementById('historyModal').classList.add('flex');
+}
+
+function loadHistoryDate(date){
+  currentDate = date;
+  document.getElementById('formDate').value = currentDate;
+  closeHistoryModal();
+  onDateChange();
+  toast(`📂 Data ${formatDateIndo(date)} dimuat`, 'info', 2000);
+}
+
+function printHistoryDate(date){
+  const savedCurrent = currentDate;
+  currentDate = date;
+  printForm();
+  currentDate = savedCurrent;
+}
+
+function deleteHistoryDate(date){
+  if (date === currentDate) { alert('⚠️ Tidak bisa hapus tanggal yang sedang aktif!'); return; }
+  if (date === '2026-09-12') { alert('️ Data 12 Sep 2026 adalah data referensi.'); return; }
+  if (!confirm(`🗑️ Hapus data ${formatDateIndo(date)}?`)) return;
+  if (!confirm(`🔴 KONFIRMASI AKHIR`)) return;
+  delete allData[date];
+  saveAll();
+  showHistory();
+  toast('🗑️ Riwayat dihapus', 'info');
+}
+
+function closeHistoryModal(){
+  document.getElementById('historyModal').classList.add('hidden');
+  document.getElementById('historyModal').classList.remove('flex');
+}
+
+/* ========== MULAI HARI BARU ========== */
+function startNewDay(){
+  const data = getCurrentData();
+  const hasData = (data.bar && data.bar.length > 0) || (data.kasir && data.kasir.length > 0);
+  
+  const tomorrow = new Date(currentDate);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowStr = tomorrow.toISOString().split('T')[0];
+
+  if (allData[tomorrowStr] && ((allData[tomorrowStr].bar && allData[tomorrowStr].bar.length > 0) || (allData[tomorrowStr].kasir && allData[tomorrowStr].kasir.length > 0))) {
+    if (!confirm(`⚠️ Tanggal ${formatDateIndo(tomorrowStr)} sudah ada data!\n\nData akan DITIMPA.\n\nLanjutkan?`)) return;
+  }
+
+  if (!hasData) {
+    if (!confirm(`📅 Tidak ada data untuk hari ini.\n\nTetap buat data baru untuk besok dengan AWAL = 0?`)) return;
+  } else {
+    const totalAkhirBar = data.bar.reduce((a,b) => a + calcAkhir(b), 0);
+    const totalAkhirKasir = data.kasir.reduce((a,b) => a + calcAkhir(b), 0);
+    if (!confirm(` MULAI HARI BARU\n\nTanggal baru: ${formatDateIndo(tomorrowStr)}\n\n📊 Carry Over:\n• Mimpi Bar: ${data.bar.length} barang (Total AKHIR: ${totalAkhirBar})\n• Mimpi Kasir: ${data.kasir.length} barang (Total AKHIR: ${totalAkhirKasir})\n\n✅ AWAL besok = AKHIR hari ini\n✅ ORDER, IN, OUT akan direset ke 0\n\nLanjutkan?`)) return;
+  }
+
+  const newData = {
+    bar: data.bar.map(item => ({...item, order:0, awal:calcAkhir(item), in:0, out:0})),
+    kasir: data.kasir.map(item => ({...item, order:0, awal:calcAkhir(item), in:0, out:0}))
+  };
+
+  allData[tomorrowStr] = newData;
+  currentDate = tomorrowStr;
+  document.getElementById('formDate').value = currentDate;
+  saveAll();
+  renderTable('bar');
+  renderTable('kasir');
+
+  document.getElementById('carryInfo').classList.remove('hidden');
+  setTimeout(() => {
+    document.getElementById('carryInfo').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 100);
+
+  toast(`✅ Hari baru dimulai! (${formatDateIndo(tomorrowStr)})`, 'success', 4000);
+}
+
+/* ========== PRINT / PDF ========== */
+function printForm(){
+  try {
+    const dateStr = currentDate;
+    const dateFormatted = formatDateIndo(dateStr);
+    const data = getCurrentData();
+
+    const renderSection = (title, items) => {
+      if (!items || items.length === 0) return `<h2 style="text-align:center; margin: 20px 0 10px 0; font-size: 16px; text-decoration: underline;">${title}</h2><p style="text-align:center; color:#666;">Tidak ada data</p>`;
+      const rows = items.map((item, idx) => {
+        const akhir = calcAkhir(item);
+        const orderVal = item.order ? item.order : '';
+        const awalVal = item.awal ? item.awal : '';
+        const inVal = item.in ? item.in : '';
+        const outVal = item.out ? item.out : '';
+        return `<tr>
+          <td class="border border-black px-2 py-1">${idx+1}</td>
+          <td class="border border-black px-2 py-1 font-semibold">${item.name || '-'}</td>
+          <td class="border border-black px-2 py-1 text-right">${orderVal}</td>
+          <td class="border border-black px-2 py-1 text-right">${awalVal}</td>
+          <td class="border border-black px-2 py-1 text-right">${inVal}</td>
+          <td class="border border-black px-2 py-1 text-right">${outVal}</td>
+          <td class="border border-black px-2 py-1 text-right font-bold">${akhir}</td>
+        </tr>`;
+      }).join('');
+
+      const totals = items.reduce((acc, item) => {
+        acc.order += (item.order||0); acc.awal += (item.awal||0);
+        acc.in += (item.in||0); acc.out += (item.out||0);
+        acc.akhir += calcAkhir(item);
+        return acc;
+      }, {order:0, awal:0, in:0, out:0, akhir:0});
+
+      return `<h2 style="text-align:center; margin: 20px 0 10px 0; font-size: 16px; text-decoration: underline;">${title}</h2>
+        <table style="width:100%; border-collapse: collapse; margin-bottom: 20px; font-size: 12px;">
+          <thead><tr style="background: #f0f0f0;">
+            <th class="border border-black px-2 py-1" style="width:30px;">#</th>
+            <th class="border border-black px-2 py-1">NAMA BARANG</th>
+            <th class="border border-black px-2 py-1" style="width:70px;">ORDER</th>
+            <th class="border border-black px-2 py-1" style="width:70px;">AWAL</th>
+            <th class="border border-black px-2 py-1" style="width:70px;">IN</th>
+            <th class="border border-black px-2 py-1" style="width:70px;">OUT</th>
+            <th class="border border-black px-2 py-1" style="width:80px;">AKHIR</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+          <tfoot><tr style="background: #f0f0f0; font-weight: bold;">
+            <td class="border border-black px-2 py-1" colspan="2" style="text-align:right;">TOTAL</td>
+            <td class="border border-black px-2 py-1 text-right">${totals.order}</td>
+            <td class="border border-black px-2 py-1 text-right">${totals.awal}</td>
+            <td class="border border-black px-2 py-1 text-right">${totals.in}</td>
+            <td class="border border-black px-2 py-1 text-right">${totals.out}</td>
+            <td class="border border-black px-2 py-1 text-right">${totals.akhir}</td>
+          </tr></tfoot>
+        </table>`;
+    };
+
+    const html = `<!DOCTYPE html><html><head><title>Form Orderan Mimpi Bar - ${dateStr}</title>
+      <style>
+        @page { size: A4; margin: 15mm; }
+        body { font-family: Arial, sans-serif; color: #000; font-size: 12px; }
+        .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px; }
+        .header h1 { margin: 0; font-size: 20px; }
+        .header p { margin: 5px 0; font-size: 14px; }
+        .signature { margin-top: 40px; display: flex; justify-content: space-between; }
+        .signature-box { text-align: center; width: 200px; }
+        .signature-line { border-top: 1px solid #000; margin-top: 60px; padding-top: 5px; }
+        .no-print { display: none; }
+        .print-btn { position: fixed; top: 10px; right: 10px; background: #1e40af; color: white; padding: 10px 20px; border: none; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; }
+        @media print { .no-print { display: none !important; } }
+      </style></head><body>
+      <button class="print-btn no-print" onclick="window.print()">🖨️ Cetak / Save PDF</button>
+      <div class="header"><h1>FORM ORDERAN MIMPI BAR</h1><p><strong>${dateFormatted}</strong></p></div>
+      ${renderSection('Form Orderan Mimpi Bar', data.bar)}
+      ${renderSection('Form Orderan Mimpi Kasir', data.kasir)}
+      <div class="signature">
+        <div class="signature-box"><p>Dibuat oleh,</p><div class="signature-line">(_________________)</div></div>
+        <div class="signature-box"><p>Diperiksa oleh,</p><div class="signature-line">(_________________)</div></div>
+        <div class="signature-box"><p>Disetujui oleh,</p><div class="signature-line">(_________________)</div></div>
+      </div>
+      <p style="text-align:center; margin-top: 30px; font-size: 10px; color: #666;">Dicetak: ${new Date().toLocaleString('id-ID')}</p>
+      </body></html>`;
+
+    const w = window.open('', '_blank', 'width=900,height=1100');
+    if (!w){ alert('⚠️ Popup diblokir!'); return; }
+    w.document.write(html);
+    w.document.close();
+  } catch(e) { toast('❌ Gagal print: ' + e.message, 'error'); }
+}
+
+/* ========== EXPORT CSV ========== */
+function exportCSV(){
+  try {
+    const dateStr = currentDate;
+    const data = getCurrentData();
+    let csv = `Form Orderan Mimpi Bar - ${formatDateIndo(dateStr)}\n\nSECTION,NAMA BARANG,ORDER,AWAL,IN,OUT,AKHIR\n`;
+    (data.bar||[]).forEach(item => { csv += `MIMPI BAR,"${item.name || ''}",${item.order||0},${item.awal||0},${item.in||0},${item.out||0},${calcAkhir(item)}\n`; });
+    csv += '\n';
+    (data.kasir||[]).forEach(item => { csv += `MIMPI KASIR,"${item.name || ''}",${item.order||0},${item.awal||0},${item.in||0},${item.out||0},${calcAkhir(item)}\n`; });
+    const blob = new Blob([csv], {type:'text/csv'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `orderan-mimpi-bar-${dateStr}.csv`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(a.href);
+    toast('📥 CSV berhasil diunduh', 'success');
+  } catch(e) { toast(' Error: ' + e.message, 'error'); }
+}
+
+/* ========== RESET ========== */
+function resetAll(){
+  if (!confirm('⚠️ Hapus SEMUA data?')) return;
+  if (!confirm('🔴 KONFIRMASI AKHIR')) return;
+  localStorage.clear();
+  location.reload();
+}
+
+/* ========== INIT ========== */
+console.log('=== INIT APP ===');
+console.log('allData keys:', Object.keys(allData));
+console.log('currentDate:', currentDate);
+
+seedInitialData();
+
+document.getElementById('formDate').value = currentDate;
+renderTable('bar');
+renderTable('kasir');
+updateDateInfo();
+updateStats();
+checkDataWarning();
+
+// Log untuk debugging
+console.log('After seed - 12 Sep bar length:', allData['2026-09-12']?.bar?.length);
+console.log('After seed - 13 Sep bar length:', allData['2026-09-13']?.bar?.length);
+</script>
+</body>
+</html>
